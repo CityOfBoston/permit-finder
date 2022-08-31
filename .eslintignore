@@ -1,0 +1,18 @@
+node_modules
+build
+coverage
+archives
+
+!.storybook
+!.*.js
+
+# These are here so we can run eslint with "**" on some directories without it
+# complaining about the other file types.
+*.snap
+*.json
+*.html
+*.md
+
+# Auto-generated type files
+CommissionsDb.d.ts
+queries.d.ts

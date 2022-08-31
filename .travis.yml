@@ -1,0 +1,114 @@
+dist: xenial
+language: node_js
+
+git:
+  # We can't limit git depth because we need to do --since checks
+  depth: false
+
+branches:
+  only:
+  - develop
+
+services:
+- docker
+
+addons:
+  chrome: stable
+
+cache:
+- yarn
+- directories:
+  - $HOME/.npm
+
+env:
+  global:
+  - TZ=America/New_York
+  - PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome
+  - LERNA_SINCE=$(if [ -n "$TRAVIS_PULL_REQUEST_SHA" ]; then echo "$TRAVIS_PULL_REQUEST_SHA^1"; else echo ""; fi)
+
+before_install:
+  # Travis has a very old version of Yarn installed, so we need to upgrade.
+  # - npm install -g yarn@`jq -r .engines.yarn package.json`
+  - npm install -g yarn@1.18.0
+  # npm install -g instead of npx so we don't need to re-unpack every time.
+  - npm install -g lerna@`jq -r .devDependencies.lerna package.json`
+  # npm install -g instead of npx so we don't need to re-unpack every time.
+  - npm install -g apollo
+  - source scripts/check-for-changes.sh
+
+# Keeps the "node_js" language setting from automatically doing a default "yarn
+# install" in cases where we leave it off.
+install: skip
+
+jobs:
+  include:
+  - name: JavaScript Tests
+    install:
+      - if [ -z "$HAS_JS_CHANGES" ]; then travis_terminate 0; fi
+      - yarn install --frozen-lockfile --ignore-scripts
+    before_script: yarn prepare
+    script: >-
+      npx lerna run
+      --since=$LERNA_SINCE
+      --scope "@cityofboston/*"
+      --scope "services-js.*"
+      --no-sort
+      test
+    after_failure:
+    - curl -sL https://raw.githubusercontent.com/travis-ci/artifacts/master/install | bash
+    - artifacts upload --target-paths travis/screenshots/$TRAVIS_BUILD_ID/$TRAVIS_JOB_ID services-js/*/screenshots
+
+  - name: Percy Snapshots
+    install:
+      - if [ -z "$HAS_JS_CHANGES" ]; then travis_terminate 0; fi
+      - yarn install --frozen-lockfile --ignore-scripts
+    before_script: yarn prepare
+    script: >-
+      npx lerna run
+      --since=$LERNA_SINCE
+      --scope=@cityofboston/*
+      --scope=services-js.*
+      --no-sort
+      percy
+
+  - name: JavaScript Template Tests
+    install:
+      - if [ -z "$HAS_TEMPLATE_CHANGES" ]; then travis_terminate 0; fi
+      - yarn install --frozen-lockfile --ignore-scripts
+    before_script: npx lerna run --since=$LERNA_SINCE --scope=templates.* --include-filtered-dependencies prepare
+    script: >-
+      npx lerna run
+      --since=$LERNA_SINCE
+      --concurrency 1
+      --stream
+      --scope=templates.*
+      test
+  
+  - name: Ruby Tests
+    install:
+      - if [ -z "$HAS_RUBY_CHANGES" ]; then travis_terminate 0; fi
+    script: >-
+      npx lerna run
+      --since=$LERNA_SINCE
+      --stream
+      --scope=services-ruby.*
+      test
+
+  - stage: deploy
+    name: Notify Shippy-Toe
+    if: type IN (push) 
+    install: skip
+    script: skip
+    deploy:
+      provider: script
+      script:
+      - npx -p deploy-tools.tgz report-updated-services
+      on:
+        branch: develop
+
+notifications:
+  slack:
+    on_success: always
+    on_failure: always
+    rooms:
+      secure: nCdLrImWYdmlid3Ij4S7tguVr9EhzvolsHhuUMq3M4x2pP2pvQa+amUEdsBwfOpoCWfd8LWSRIY5eoK7V361yHXYOR9484p2ny1o4/QDSTgtaEFhkBQlfYMvhTZrFZN8slCh2J30gbyvCW23fSpZIAkX3u8MPnGNHduee+lmTtfvKx9phrfLKJBko5kI+4gnOelLMFM0tjjmS4EXRbwhvYsPPwoMuPNOGoYQJAoUsH2WBRMizVMIc/Rtl/L2y0tQ8kBi0KtyEllHZO9ce1RoxFDMuRZzQnd2WsQ13ZN83e4qHeXQYDsLqVjRvjeENoM4RSUROplwTcrJ+AhOamUlSldPrgZYYYSEW4FI61fs4+zwJIP4/vCQk8b6IFA7DVAQz4pXUrZV6NuVZQmtZyTZth7UHIgDpepgFRcBI4tRZQ7W6XhPjGe/6xg0wZ/5K86HdZJG0Tq4B/tDLbu3y069Y2oKZYtCJebFYx45lF3iBCJx/97uJFcclB1rjyg8K0IGjCaraR6BatfLKKkrjg3bfzG643/AupWvYhsqg9Q6LFMtE1kucXmAEYRH/a58MmUjNYFavqsDNPVZ8xi1LEXp171ySd4agaHN/9+ORi2wectIgBZqOldGw80WXeLqP3lfVyRFtW26ZTpoM7jfxbzWiIpX4C7K4QHe4KAy8KTCnQ4=
