@@ -1,0 +1,32 @@
+{
+  "name": "services-js.permit-finder",
+  "version": "0.0.0",
+  "description": "Shows status of building and fire permits",
+  "private": true,
+  "license": "CC0-1.0",
+  "jest": {
+    "testPathIgnorePatterns": [
+      "<rootDir>/build/",
+      "<rootDir>/node_modules/",
+      "<rootDir>/scripts/"
+    ]
+  },
+  "dependencies": {
+    "deploy-tools": "CityOfBoston/deploy-tools#main",
+    "form-common": "CityOfBoston/form-common#main",
+    "graphql-typescript": "CityOfBoston/graphql-typescript#main",
+    "hapi-common": "CityOfBoston/hapi-common#main",
+    "hapi-next": "CityOfBoston/hapi-next#main",
+    "mssql-common": "CityOfBoston/mssql-common#main",
+    "mssql-typescript": "CityOfBoston/mssql-typescript#main",
+    "next-client-common": "CityOfBoston/next-client-common#main",
+    "percy-common": "CityOfBoston/percy-common#main",
+    "react-fleet": "CityOfBoston/react-fleet#main",
+    "srv-decrypt-env": "CityOfBoston/srv-decrypt-env#main",
+    "storybook-common": "CityOfBoston/storybook-common#main"
+  },
+  "devDependencies": {
+    "babel-config": "CityOfBoston/config-babel#main",
+    "@cityofboston/config-typescript": "^0.0.0"
+  }
+}
