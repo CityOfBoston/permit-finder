@@ -21,10 +21,10 @@
     ]
   },
   "dependencies": {
-    "core-js": "^2.6.4"
+    "core-js": "^3.25.3"
   },
   "devDependencies": {
-    "babel-config": "CityOfBoston/config-babel#main",
+    "config-babel": "CityOfBoston/config-babel#node14plus",
     "@cityofboston/config-typescript": "^0.0.0",
     "@types/node": "^8.0.0",
     "@types/jest": "24.x.x",

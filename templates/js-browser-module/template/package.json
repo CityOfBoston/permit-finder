@@ -26,7 +26,7 @@
     ]
   },
   "dependencies": {
-    "core-js": "^2.6.4"
+    "core-js": "^3.25.3"
   },
   "peerDependencies": {
     "@babel/runtime": "7.1.2",
@@ -39,7 +39,7 @@
     "@babel/core": "7.1.2",
     "@babel/runtime": "7.1.2",
     "@emotion/core": "^10.0.10",
-    "babel-config": "CityOfBoston/config-babel#main",
+    "config-babel": "CityOfBoston/config-babel#node14plus",
     "@cityofboston/config-typescript": "^0.0.0",
     "@types/jest": "24.x.x",
     "babel-core": "^7.0.0-0",
