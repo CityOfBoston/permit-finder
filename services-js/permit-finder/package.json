@@ -17,6 +17,7 @@
   "devDependencies": {
     "@babel/cli": "^7.18.10",
     "@babel/core": "^7.19.1",
-    "config-babel": "CityOfBoston/config-babel#node14plus"
+    "config-babel": "CityOfBoston/config-babel#node14plus",
+    "next-client-common": "CityOfBoston/next-client-common#main"
   }
 }

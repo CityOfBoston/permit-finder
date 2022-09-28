@@ -1,0 +1,7 @@
+{
+  "presets": [
+    "config-babel/next",
+    "config-babel/typescript",
+    "config-babel/storybook"
+  ]
+}
