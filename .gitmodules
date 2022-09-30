@@ -1,0 +1,12 @@
+[submodule "modules-js/config-babel"]
+	path = modules-js/config-babel
+	url = git@github.com:CityOfBoston/config-babel.git
+	branch = node14plus
+[submodule "modules-js/config-typescript"]
+	path = modules-js/config-typescript
+	url = git@github.com:CityOfBoston/config-typescript.git
+	branch = node14plus
+[submodule "modules-js/next-client-common"]
+	path = modules-js/next-client-common
+	url = git@github.com:CityOfBoston/next-client-common.git
+	branch = apollo

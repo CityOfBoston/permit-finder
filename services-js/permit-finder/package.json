@@ -48,7 +48,7 @@
   "devDependencies": {
     "@babel/cli": "^7.6.0",
     "@babel/core": "^7.6.0",
-    "babel-config": "CityOfBoston/config-babel#main",
+    "config-babel": "CityOfBoston/config-babel#main",
     "graphql-typescript": "CityOfBoston/graphql-typescript#main",
     "react-fleet": "CityOfBoston/react-fleet#main",
     "storybook-common": "CityOfBoston/storybook-common#main",
